@@ -1,0 +1,16 @@
+<div class="home-container">
+  <div class="welcome-card">
+    <div class="greeting">
+      <h1>Hello {{ user.username }}! 👋</h1>
+      <p class="subtitle">Welcome to SMS Messenger</p>
+    </div>
+    
+    <div class="actions">
+      <button 
+        class="btn btn-primary" 
+        (click)="navigate('/messenger')">
+        Start Messaging
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,64 @@
+<mat-toolbar color="primary" class="navbar">
+  <button mat-button (click)="navigate('/home')">
+        Home
+  </button>
+  <span class="spacer"></span>
+  
+  <div class="desktop-nav">
+    <ng-container *ngIf="isLoggedIn">
+      <button mat-button (click)="navigate('/messenger')">
+        <mat-icon>message</mat-icon>
+        SMS Messenger
+      </button>
+      
+      <button mat-stroked-button (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        Logout
+      </button>
+    </ng-container>
+    
+    <ng-container *ngIf="!isLoggedIn">
+      <button mat-button (click)="navigate('/login')">
+        <mat-icon>login</mat-icon>
+        Login
+      </button>
+      
+      <button mat-stroked-button (click)="navigate('/signup')">
+        <mat-icon>person_add</mat-icon>
+        Sign Up
+      </button>
+    </ng-container>
+  </div>
+  
+  <div class="mobile-nav">
+    <button mat-icon-button [matMenuTriggerFor]="mobileMenu">
+      <mat-icon>menu</mat-icon>
+    </button>
+    
+    <mat-menu #mobileMenu="matMenu">
+      <ng-container *ngIf="isLoggedIn">
+        <button mat-menu-item (click)="navigate('/messenger')">
+          <mat-icon>message</mat-icon>
+          <span>SMS Messenger</span>
+        </button>
+        
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          <span>Logout</span>
+        </button>
+      </ng-container>
+      
+      <ng-container *ngIf="!isLoggedIn">
+        <button mat-menu-item (click)="navigate('/login')">
+          <mat-icon>login</mat-icon>
+          <span>Login</span>
+        </button>
+        
+        <button mat-menu-item (click)="navigate('/signup')">
+          <mat-icon>person_add</mat-icon>
+          <span>Sign Up</span>
+        </button>
+      </ng-container>
+    </mat-menu>
+  </div>
+</mat-toolbar>

@@ -1,0 +1,77 @@
+<div class="auth-container">
+  <div class="auth-wrapper">
+    <mat-card class="auth-card">
+      <mat-card-header>
+        <mat-card-title class="auth-title">Login</mat-card-title>
+        <mat-card-subtitle>Sign in to your account</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <!-- Error display -->
+        @if (error()) {
+          <div class="error-message">
+            {{ error() }}
+          </div>
+        }
+
+        <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+          <!-- Username Field (Changed from Email) -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Username</mat-label>
+            <input 
+              matInput 
+              type="text" 
+              [(ngModel)]="username"
+              name="username"
+              placeholder="Enter your username"
+              [disabled]="isLoading()"
+              (input)="clearError()"
+              required>
+            <mat-icon matSuffix>person</mat-icon>
+          </mat-form-field>
+
+          <!-- Password Field -->
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Password</mat-label>
+            <input 
+              matInput 
+              type="password"
+              [(ngModel)]="password"
+              name="password"
+              placeholder="Enter your password"
+              [disabled]="isLoading()"
+              (input)="clearError()"
+              required>
+            <mat-icon matSuffix>lock</mat-icon>
+          </mat-form-field>
+
+          <!-- Submit Button -->
+          <button 
+            mat-raised-button 
+            type="submit"
+            class="auth-submit-button"
+            [disabled]="!loginForm.valid || isLoading()">
+            @if (isLoading()) {
+              Signing in...
+            } @else {
+              Sign In
+            }
+          </button>
+        </form>
+
+        <!-- Navigation to Signup -->
+        <div class="auth-footer">
+          <p>Don't have an account? 
+            <button 
+              mat-button 
+              class="link-button"
+              (click)="navigateToSignup()"
+              [disabled]="isLoading()">
+              Sign up here
+            </button>
+          </p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

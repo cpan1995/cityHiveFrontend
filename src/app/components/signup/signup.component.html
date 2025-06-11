@@ -1,0 +1,73 @@
+<div class="auth-container">
+  <div class="auth-wrapper">
+    <mat-card class="auth-card">
+      <mat-card-header>
+        <mat-card-title class="auth-title">Sign Up</mat-card-title>
+        <mat-card-subtitle>Create your account</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        @if (error()) {
+          <div class="error-message">
+            {{ error() }}
+          </div>
+        }
+
+        <form (ngSubmit)="onSubmit()" #signupForm="ngForm">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Username</mat-label>
+            <input 
+              matInput 
+              type="text" 
+              [(ngModel)]="username"
+              name="username"
+              placeholder="Enter your username"
+              [disabled]="isLoading()"
+              (input)="clearError()"
+              required>
+            <mat-icon matSuffix>person</mat-icon>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Password</mat-label>
+            <input 
+              matInput 
+              type="password"
+              [(ngModel)]="password"
+              name="password"
+              placeholder="Enter your password"
+              [disabled]="isLoading()"
+              (input)="clearError()"
+              required
+              minlength="6">
+            <mat-icon matSuffix>lock</mat-icon>
+          </mat-form-field>
+
+          <button 
+            mat-raised-button 
+            type="submit"
+            class="auth-submit-button"
+            [disabled]="!signupForm.valid || isLoading()">
+            @if (isLoading()) {
+              Creating Account...
+            } @else {
+              Create Account
+            }
+          </button>
+        </form>
+        
+        <div class="auth-footer">
+          <p>Already have an account? 
+            <button 
+              mat-button 
+              class="link-button"
+              (click)="navigateToLogin()"
+              [disabled]="isLoading()">
+              Sign in here
+            </button>
+          </p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

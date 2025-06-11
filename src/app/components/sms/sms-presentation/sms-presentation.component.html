@@ -1,0 +1,167 @@
+<div class="messenger-container">
+  <h1 class="page-title">MY SMS MESSENGER</h1>
+  
+  <div class="messenger-layout">
+    <mat-card class="new-message-card">
+      <mat-card-header>
+        <mat-card-title>New Message</mat-card-title>
+      </mat-card-header>
+      
+      <mat-card-content>
+        
+        @if (smsService.error()) {
+          <div class="error-message">
+            {{ smsService.error() }}
+          </div>
+        }
+        
+        <form (ngSubmit)="onSubmit()" #messageForm="ngForm">
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Phone Number</mat-label>
+            <input 
+                matInput 
+                type="tel" 
+                [(ngModel)]="phoneNumber"
+                name="phoneNumber"
+                placeholder="Enter phone number"
+                [disabled]="smsService.isLoading()"
+                (keypress)="onKeyPress($event)"
+                (input)="formatPhone($event)"
+                maxlength="14"
+                required>
+          </mat-form-field>
+          
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Message</mat-label>
+            <textarea 
+              matInput 
+              [(ngModel)]="messageText"
+              name="messageText"
+              rows="4"
+              placeholder="Type your message here..."
+              [disabled]="smsService.isLoading()"
+              [maxlength]="maxCharacters"
+              required>
+            </textarea>
+            <mat-hint class="character-hint">{{ characterCount }}/{{ maxCharacters }}</mat-hint>
+          </mat-form-field>
+
+          <div class="action-buttons">
+            <button 
+              mat-button 
+              type="button" 
+              (click)="clearForm()"
+              [disabled]="smsService.isLoading()"
+              class="clear-button">
+              Clear
+            </button>
+            <button 
+              mat-raised-button 
+              type="submit"
+              class="submit-button"
+              [disabled]="!isFormValid || smsService.isLoading()">
+              @if (smsService.isLoading()) {
+                Sending...
+              } @else {
+                Submit
+              }
+            </button>
+          </div>
+        </form>
+
+        <div class="status-summary">
+          <div class="status-item">
+            <mat-icon class="status-icon pending">schedule</mat-icon>
+            <span>{{ smsService.pendingCount() }} Pending</span>
+          </div>
+          <div class="status-item">
+            <mat-icon class="status-icon delivered">done_all</mat-icon>
+            <span>{{ smsService.deliveredCount() }} Delivered</span>
+          </div>
+          <div class="status-item">
+            <mat-icon class="status-icon failed">error</mat-icon>
+            <span>{{ smsService.failedCount() }} Failed</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="history-card">
+      <mat-card-header>
+        <mat-card-title class="history-title">
+          Message History ({{ smsService.messageCount() }})
+        </mat-card-title>
+      </mat-card-header>
+      
+      <mat-card-content class="history-content">
+        <div class="message-list">
+          
+          @for (message of smsService.messages(); track message.id) {
+            <div class="message-item" [class.pending]="message.status === 'pending'">
+              <div class="message-header">
+                <span class="phone-number">{{ message.phoneNumber }}</span>
+                <div class="header-right">
+                  <span class="status-badge" [class]="message.status">
+                    <mat-icon class="status-icon-small">{{ message.statusIcon }}</mat-icon>
+                    {{ smsService.getStatusText(message.status) }}
+                  </span>
+                  <span class="timestamp">{{ formatTimestamp(message.timestamp) }}</span>
+                </div>
+              </div>
+              
+              <div class="message-bubble">
+                {{ message.text }}
+              </div>
+              
+              <div class="message-footer">
+                <div class="footer-left">
+                  @if (message.status === 'delivered' && message.deliveredAt) {
+                    <span class="delivery-time">
+                      <mat-icon class="tiny-icon">check_circle</mat-icon>
+                      Delivered {{ formatTimestamp(message.deliveredAt) }}
+                    </span>
+                  }
+                  @if (message.status === 'failed') {
+                    <span class="error-info">
+                      <mat-icon class="tiny-icon">error_outline</mat-icon>
+                      @if (message.errorMessage) {
+                        {{ message.errorMessage }}
+                      } @else {
+                        Failed to send
+                      }
+                    </span>
+                  }
+                </div>
+                <div class="footer-right">
+                  <span class="message-char-count">{{ message.characterCount }}/250</span>
+                  @if (message.status === 'failed') {
+                    <button mat-button class="retry-button" (click)="retryMessage(message)">
+                      <mat-icon class="tiny-icon">refresh</mat-icon>
+                      Retry
+                    </button>
+                  }
+                </div>
+              </div>
+              
+              @if (message.status === 'pending') {
+                <mat-progress-bar mode="indeterminate" class="message-progress"></mat-progress-bar>
+              }
+              
+              <mat-divider class="message-divider"></mat-divider>
+            </div>
+          }
+          
+          @if (!smsService.hasMessages()) {
+            <div class="no-messages">
+              <mat-icon class="large-icon">chat_bubble_outline</mat-icon>
+              <p>No messages sent yet.</p>
+              <small>Send your first message above!</small>
+            </div>
+          }
+          
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

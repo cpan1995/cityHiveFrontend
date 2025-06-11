@@ -42,12 +42,6 @@ TWILIO_PHONE_NUMBER=+1234567890
 
 # ngrok URL (update this after starting ngrok)
 NGROK_URL=https://your-ngrok-url.ngrok-free.app
-
-# Database Configuration
-MONGODB_URI=mongodb://localhost:27017/sms_messenger_development
-
-# JWT Secret
-JWT_SECRET=your_jwt_secret_key_here
 ```
 
 ### 3. Backend Setup (Rails)
@@ -55,10 +49,6 @@ JWT_SECRET=your_jwt_secret_key_here
 ```bash
 # Install Ruby dependencies
 bundle install
-
-# Set up database
-rails db:create
-rails db:migrate
 
 # Start Rails server
 rails server
